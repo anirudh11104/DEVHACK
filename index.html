@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,26 +11,61 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
             color: #333;
+            position: relative;
+            /* Ensure proper positioning for background layers */
+        }
+
+        /* Fullscreen Video Background */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            /* Place it behind the content */
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            /* Dark overlay to ensure text visibility */
+            z-index: 0;
         }
 
         .navbar {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
             background-color: #222;
             padding: 1em;
             position: relative;
+            z-index: 1;
+        }
+
+        .navbar h1 {
+            color: #fff;
+            font-size: 1.8em;
+            margin: 0;
+            position: absolute;
+            /* Make the heading absolutely positioned */
+            left: 50%;
+            transform: translateX(-50%);
+            /* Center the heading horizontally */
         }
 
         .navbar a {
             color: #fff;
             text-decoration: none;
-            margin-left: 20px;
             font-size: 1.2em;
             padding: 10px 20px;
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -52,6 +88,7 @@
             gap: 3px;
         }
 
+
         .navbar .menu-btn div {
             width: 25px;
             height: 3px;
@@ -60,14 +97,16 @@
         }
 
         .header {
-            background-color: #333;
             color: #fff;
             padding: 50px 0;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         .header h1 {
             font-size: 3em;
+            font-family: cursive;
         }
 
         .search-container {
@@ -125,7 +164,7 @@
         .search-box.expanded input[type="text"] {
             width: 100%;
             padding: 15px 15px 15px 50px;
-            opacity: 1;
+            opacity: 0.8;
         }
 
         .search-box input[type="text"]::placeholder {
@@ -138,13 +177,14 @@
             align-items: center;
             flex-grow: 1;
             padding: 50px;
+            position: relative;
+            z-index: 1;
         }
 
         .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
+            width: 100%;
+            height: 100%;
+            position: relative;
         }
 
         .button-container button {
@@ -153,10 +193,12 @@
             background-color: #444;
             color: #fff;
             border: none;
-            border-radius: 15px;
+            border-radius: 100px;
             font-size: 1.5em;
             cursor: pointer;
             transition: transform 0.3s ease, background-color 0.3s ease;
+            position: absolute;
+            opacity: 0.8;
         }
 
         .button-container button:hover {
@@ -164,12 +206,46 @@
             transform: scale(1.1);
         }
 
+        /* First Button ("Scan For Open Ports") aligned at half the height and quarter width */
+        .button-container button:nth-child(1) {
+            top: 50%;
+            /* Half the height */
+            left: 20%;
+            /* Quarter of the width */
+            transform: translate(-50%, -100%);
+            /* Adjust for exact centering */
+        }
+
+        /* Second Button ("Vulnerability Assessment") aligned at bottom middle */
+        .button-container button:nth-child(2) {
+            top:50%;
+            /* Align at the very bottom */
+            left: 42%;
+            /* Middle of the width */
+            transform: translate(-0%, -0%);
+            /* Center horizontally */
+        }
+
+        /* Third Button ("Nicto") aligned at half the height and three-fourths width */
+        .button-container button:nth-child(3) {
+            top: 50%;
+            /* Half the height */
+            left: 80%;
+            /* Three-fourths of the width */
+            transform: translate(-50%, -100%);
+            /* Adjust for exact centering */
+        }
+
+
+
         .footer {
             background-color: #222;
             color: #fff;
             text-align: center;
             padding: 10px;
             margin-top: auto;
+            position: relative;
+            z-index: 1;
         }
 
         /* Side Navigation Bar */
@@ -178,7 +254,7 @@
             width: 250px;
             position: fixed;
             top: 0;
-            left: -250px; /* Hide off-screen initially */
+            left: -250px;
             background-color: #2c2b2b;
             color: #fff;
             overflow-x: hidden;
@@ -214,10 +290,21 @@
         }
     </style>
 </head>
+
 <body style="font-family: cursive;">
+
+    <!-- Fullscreen Video Background -->
+    <video autoplay muted loop class="video-background">
+        <source src="videoplayback.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Dark Overlay for Visibility -->
+    <div class="overlay"></div>
 
     <!-- Navbar -->
     <div class="navbar">
+        <h1 style="color:#fff;">Security Tools Dashboard</h1>
         <button class="menu-btn" id="menu-btn">
             <div></div>
             <div></div>
@@ -235,7 +322,6 @@
 
     <!-- Header -->
     <div class="header">
-        <h1 style="font-family:cursive">Security Tools Dashboard</h1>
         <div class="search-container">
             <div class="search-box" id="search-box">
                 <input type="text" id="search-input" placeholder="Search...">
@@ -245,11 +331,12 @@
     </div>
 
     <!-- Main Content with Buttons -->
+    <!-- Main Content with Buttons -->
     <div class="main-content">
         <div class="button-container">
-            <button style="font-family: cursive;">Scan For Open Ports</button>
-            <button style="font-family: cursive;">Vulnerability Assessment</button>
-            <button style="font-family: cursive;">Nicto</button>
+            <button>Scan For Open Ports</button>
+            <button>Vulnerability Assessment</button>
+            <button>Nicto</button>
         </div>
     </div>
 
@@ -265,18 +352,18 @@
         const menuBtn = document.getElementById('menu-btn');
         const sidenav = document.getElementById('mySidenav');
 
-        searchBtn.addEventListener('click', function() {
+        searchBtn.addEventListener('click', function () {
             searchBox.classList.toggle('expanded');
             searchInput.focus();
         });
 
-        searchInput.addEventListener('blur', function() {
+        searchInput.addEventListener('blur', function () {
             if (this.value === '') {
                 searchBox.classList.remove('expanded');
             }
         });
 
-        menuBtn.addEventListener('click', function() {
+        menuBtn.addEventListener('click', function () {
             sidenav.classList.add('open');
         });
 
@@ -286,4 +373,5 @@
     </script>
 
 </body>
+
 </html>
